@@ -9,7 +9,16 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useT } from "@/lib/i18n/i18n-context";
-import { Train, LogOut, LogIn, Menu } from "lucide-react";
+import { Train, LogOut, LogIn, Menu, User } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 const navLinks = [
   { href: "/", labelKey: "nav.home" },
@@ -59,16 +68,33 @@ export function Header() {
           <LanguageSwitcher />
 
           {session ? (
-            <>
-              <Button variant="ghost" size="sm" onClick={() => signOut()} className="lg:hidden" title="Sign Out">
-                <LogOut className="h-4 w-4" />
-              </Button>
-              <div className="hidden lg:block">
-                <Button variant="ghost" size="sm" onClick={() => signOut()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0052CC] text-sm font-bold text-white hover:bg-blue-700 transition outline-none">
+                  {(session.user?.name?.[0] || session.user?.email?.[0] || "U").toUpperCase()}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{session.user?.name || "User"}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{session.user?.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="cursor-pointer">
+                    <User className="h-4 w-4" />
+                    My Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-500 focus:text-red-500">
                   <LogOut className="h-4 w-4" />
-                </Button>
-              </div>
-            </>
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <>
               <Link href="/auth/login" className="lg:hidden">
@@ -116,10 +142,18 @@ export function Header() {
               <div className="mt-6 border-t border-slate-700 pt-4 flex flex-col items-center gap-3">
                 <LanguageSwitcher />
                 {session ? (
-                  <Button variant="ghost" size="sm" onClick={() => signOut()}>
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </Button>
+                  <>
+                    <Link href="/profile" onClick={() => setOpen(false)} className="w-full">
+                      <Button variant="ghost" size="sm" className="w-full justify-start">
+                        <User className="h-4 w-4" />
+                        My Profile
+                      </Button>
+                    </Link>
+                    <Button variant="ghost" size="sm" onClick={() => signOut()} className="w-full justify-start text-red-500">
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </Button>
+                  </>
                 ) : (
                   <Link href="/auth/login" onClick={() => setOpen(false)} className="w-full">
                     <Button className="w-full rounded-xl bg-[#0052CC] text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition">

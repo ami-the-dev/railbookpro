@@ -1,0 +1,29 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPattern": "/api/booking/([0-9]{10})"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "status": true,
+      "pnr": "{{request.pathSegments.[2]}}",
+      "train_number": "12615",
+      "train_name": "Grand Trunk Express",
+      "from": "NDLS",
+      "to": "MAS",
+      "travel_date": "2026-06-15",
+      "class": "3A",
+      "quota": "GN",
+      "booking_status": "CONFIRMED",
+      "seat": "S4/34-LB",
+      "total_fare": 1500,
+      "message": "Booking found"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

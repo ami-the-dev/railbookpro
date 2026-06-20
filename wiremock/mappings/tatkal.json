@@ -1,0 +1,34 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "url": "/api/tatkal",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.train_number"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "status": true,
+      "pnr": "{{randomValue length=10 type='NUMERIC'}}",
+      "train_number": "{{jsonPath request.body '$.train_number'}}",
+      "train_name": "{{jsonPath request.body '$.train_name'}}",
+      "from": "{{jsonPath request.body '$.from_station'}}",
+      "to": "{{jsonPath request.body '$.to_station'}}",
+      "travel_date": "{{jsonPath request.body '$.date'}}",
+      "class": "{{jsonPath request.body '$.class'}}",
+      "quota": "TQ",
+      "booking_status": "CONFIRMED",
+      "seat": "S4/34-LB",
+      "total_fare": 2000,
+      "message": "Tatkal booking confirmed"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

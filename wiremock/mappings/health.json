@@ -1,0 +1,19 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "url": "/api/health"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "status": "OK",
+      "service": "WireMock IRCTC Booking Mock",
+      "timestamp": "{{now}}"
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

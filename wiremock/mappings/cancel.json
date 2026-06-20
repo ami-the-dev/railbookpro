@@ -1,0 +1,23 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "url": "/api/cancel",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.pnr"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "status": true,
+      "refund": 1500,
+      "message": "Booking cancelled. Refund of ₹1500 initiated."
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

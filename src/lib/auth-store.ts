@@ -97,3 +97,26 @@ export function updateUserPassword(id: string, newPassword: string): StoredUser 
   user.password = newPassword;
   return user;
 }
+
+const resetTokens = new Map<string, { userId: string; expires: Date }>();
+
+export function createResetToken(email: string): string | null {
+  const user = findUserByEmail(email);
+  if (!user) return null;
+  const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  resetTokens.set(token, { userId: user.id, expires: new Date(Date.now() + 60 * 60 * 1000) });
+  return token;
+}
+
+export function findUserByResetToken(token: string): StoredUser | null {
+  const entry = resetTokens.get(token);
+  if (!entry || entry.expires < new Date()) {
+    resetTokens.delete(token);
+    return null;
+  }
+  return findUserById(entry.userId) || null;
+}
+
+export function consumeResetToken(token: string): boolean {
+  return resetTokens.delete(token);
+}

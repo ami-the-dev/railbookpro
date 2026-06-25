@@ -13,6 +13,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [resending, setResending] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -41,6 +42,27 @@ export default function ForgotPasswordPage() {
     }
   }
 
+  async function handleResend() {
+    setResending(true);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Something went wrong");
+        return;
+      }
+      toast.success("Reset link resent successfully");
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setResending(false);
+    }
+  }
+
   if (sent) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary/5 to-background p-4">
@@ -54,6 +76,15 @@ export default function ForgotPasswordPage() {
           <p className="text-muted-foreground">
             We&apos;ve sent a password reset link to <strong>{email}</strong>
           </p>
+          <Button
+            onClick={handleResend}
+            variant="outline"
+            className="w-full"
+            disabled={resending}
+          >
+            {resending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+            Resend link
+          </Button>
           <Link
             href="/auth/login"
             className="inline-flex items-center gap-2 text-primary font-medium hover:underline"

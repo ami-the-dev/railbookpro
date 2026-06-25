@@ -24,6 +24,7 @@ export function LanguageSwitcher() {
       <button
         onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
         className="inline-flex items-center justify-center gap-1.5 h-8 rounded-[5px] px-3 text-xs font-medium border border-white/30 text-white hover:text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+        suppressHydrationWarning
       >
         <Globe className="h-4 w-4 shrink-0" />
         <span className="text-xs hidden lg:inline">{localeNames[locale]}</span>
@@ -35,6 +36,7 @@ export function LanguageSwitcher() {
             <button
               key={l}
               onClick={() => { setLocale(l); setOpen(false); }}
+              suppressHydrationWarning
               className={`w-full text-left px-4 py-2 text-xs font-medium transition ${
                 l === locale
                   ? "text-[#0052CC] bg-blue-500/10"

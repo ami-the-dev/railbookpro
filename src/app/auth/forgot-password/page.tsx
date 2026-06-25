@@ -27,8 +27,8 @@ export default function ForgotPasswordPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         toast.error(data.error || "Something went wrong");
         return;
       }

@@ -45,6 +45,7 @@ function defaultProfile() {
 const testUsers: StoredUser[] = [
   { id: generateId(), name: "Test User", email: "test@example.com", phone: "9999999999", password: "password123", role: "user", ...defaultProfile() },
   { id: generateId(), name: "Test Agent", email: "agent@example.com", phone: "8888888888", password: "password123", role: "agent", ...defaultProfile() },
+  { id: generateId(), name: "Amit", email: "itamit2013@gmail.com", phone: "7777777777", password: "password123", role: "user", ...defaultProfile() },
 ];
 for (const u of testUsers) {
   users.set(u.id, u);

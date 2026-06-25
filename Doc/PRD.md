@@ -303,6 +303,8 @@ model Passenger {
 - [ ] WireMock setup (mock IRCTC booking responses)
 - [ ] IRCTC Connect integration (real search, availability, PNR)
 - [ ] User auth (NextAuth)
+  - [ ] Migrate from in-memory store (auth-store.ts) to PostgreSQL via Prisma
+  - [ ] Implement password hashing (bcrypt/argon2)
 - [ ] Train search + availability
 - [ ] Booking flow + payment (uses WireMock in dev)
 - [ ] PNR status + cancellation (uses WireMock in dev)

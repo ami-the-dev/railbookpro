@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,6 +16,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -30,8 +31,11 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setEmailError("");
+    setPasswordError("");
     if (!form.email || !form.password) {
-      toast.error("Please fill in all fields");
+      if (!form.email) setEmailError("Please enter your email");
+      if (!form.password) setPasswordError("Please enter your password");
       return;
     }
     setLoading(true);
@@ -43,7 +47,7 @@ export default function LoginPage() {
       });
       const { exists } = await check.json();
       if (!exists) {
-        toast.error("Email not registered. Please create an account first.");
+        setEmailError("Email not registered. Please create an account first.");
         setLoading(false);
         return;
       }
@@ -53,14 +57,13 @@ export default function LoginPage() {
         redirect: false,
       });
       if (result?.error) {
-        toast.error("Incorrect password");
+        setPasswordError("Incorrect password");
       } else {
-        toast.success("Signed in successfully");
         router.push("/");
         router.refresh();
       }
     } catch {
-      toast.error("Something went wrong");
+      setEmailError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -88,9 +91,15 @@ export default function LoginPage() {
               type="email"
               placeholder="you@example.com"
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={(e) => { setForm({ ...form, email: e.target.value }); setEmailError(""); setPasswordError(""); }}
               required
             />
+            {emailError && (
+              <p className="text-sm text-red-500 flex items-center gap-1">
+                <svg className="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
+                {emailError}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
@@ -100,7 +109,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) => { setForm({ ...form, password: e.target.value }); setPasswordError(""); }}
                 required
               />
               <button
@@ -111,6 +120,12 @@ export default function LoginPage() {
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
+            {passwordError && (
+              <p className="text-sm text-red-500 flex items-center gap-1">
+                <svg className="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
+                {passwordError}
+              </p>
+            )}
           </div>
           <div className="text-right text-sm">
             <Link href="/auth/forgot-password" className="text-primary font-medium hover:underline">

@@ -36,13 +36,24 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
+      const check = await fetch("/api/auth/check-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email }),
+      });
+      const { exists } = await check.json();
+      if (!exists) {
+        toast.error("Email not registered. Please create an account first.");
+        setLoading(false);
+        return;
+      }
       const result = await signIn("credentials", {
         email: form.email,
         password: form.password,
         redirect: false,
       });
       if (result?.error) {
-        toast.error("Invalid email or password");
+        toast.error("Incorrect password");
       } else {
         toast.success("Signed in successfully");
         router.push("/");

@@ -1,11 +1,27 @@
 import nodemailer from "nodemailer";
 
 function getTransporter() {
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const user = process.env.GMAIL_USER || process.env.SMTP_USER;
+  if (!user) {
+    throw new Error("Email not configured. Set GMAIL_USER or SMTP_USER in .env.local");
+  }
 
-  if (!user || !pass) {
-    throw new Error(`SMTP not configured. SMTP_USER=${!!user}, SMTP_PASS=${!!pass}`);
+  if (process.env.GMAIL_CLIENT_ID && process.env.GMAIL_CLIENT_SECRET && process.env.GMAIL_REFRESH_TOKEN) {
+    return nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user,
+        clientId: process.env.GMAIL_CLIENT_ID,
+        clientSecret: process.env.GMAIL_CLIENT_SECRET,
+        refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+      },
+    });
+  }
+
+  const pass = process.env.SMTP_PASS;
+  if (!pass) {
+    throw new Error("Email not configured. Set GMAIL_CLIENT_ID/GMAIL_CLIENT_SECRET/GMAIL_REFRESH_TOKEN for OAuth2, or SMTP_PASS for password auth.");
   }
 
   return nodemailer.createTransport({
@@ -32,7 +48,7 @@ export async function verifySmtpConfig(): Promise<string> {
 export async function sendResetPasswordEmail(to: string, token: string) {
   const transporter = getTransporter();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const fromUser = process.env.SMTP_USER || "noreply@railbookpro.in";
+  const fromUser = process.env.GMAIL_USER || process.env.SMTP_USER || "noreply@railbookpro.in";
   const resetUrl = `${appUrl}/auth/reset-password/${token}`;
 
   console.log(`[Email] Sending reset email to ${to} via ${fromUser} (appUrl=${appUrl})`);

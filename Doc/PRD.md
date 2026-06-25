@@ -313,6 +313,9 @@ model Passenger {
 - [ ] Schedule management
 - [ ] Tatkal booking support
 - [ ] Email/SMS notifications
+  - [ ] Set up domain + DNS (SPF, DKIM, DMARC)
+  - [ ] Configure Gmail OAuth2 (Gmail API) for inbox delivery (not spam)
+  - [ ] Switch from SMTP App Password to OAuth2 after domain purchase
 - [ ] Advanced admin dashboard (reports, analytics)
 - [ ] Redis caching layer
 
@@ -338,6 +341,7 @@ model Passenger {
 | **Payments** | Razorpay | Indian-optimized, UPI/Cards/NB |
 | **Local Dev** | Docker Compose | One-command setup, reproducible |
 | **Responsiveness** | Mobile-first responsive | All pages adapt 320px+ |
+| **Email Delivery** | Gmail OAuth2 (Gmail API) | SMTP App Password for dev; OAuth2 + domain (SPF/DKIM) for production to avoid spam |
 
 ---
 
